@@ -155,7 +155,7 @@ const NewGame = () => {
         />
         <button
           onClick={generateSalt}
-          className="w-full py-[13px] text-white text-xs font-bold rounded-[5px] bg-[#2F64FF] hover:bg-[#1d4ed8] cursor-pointer transition-colors"
+          className="w-full py-[9px] text-white text-xs font-bold rounded-[5px] bg-[#2F64FF] hover:bg-[#1d4ed8] cursor-pointer transition-colors"
         >
           Generate Salt
         </button>
@@ -163,7 +163,7 @@ const NewGame = () => {
       <div className="pt-3">
         <button
           disabled={isCreatingGame}
-          className={`w-full py-3.5 text-white text-xs font-bold rounded-[5px] ${
+          className={`w-full py-3 text-white text-xs font-bold rounded-[5px] ${
             isCreatingGame
               ? "bg-[#2f64ff] opacity-30 cursor-not-allowed"
               : "bg-[#2F64FF] hover:bg-[#1d4ed8] cursor-pointer"

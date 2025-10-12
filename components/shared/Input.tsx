@@ -31,7 +31,7 @@ const Input: React.FC<InputProps> = ({
         name={name}
         value={value}
         onChange={onChange}
-        className="p-[11px_10px] text-xs border-2 border-[#2F64FF] rounded-[5px] bg-[#0a0a0a] focus:outline-none"
+        className="py-2 px-2.5 text-xs border border-[#2F64FF] rounded-[5px] bg-[#0a0a0a] focus:outline-none"
       />
     </div>
   );

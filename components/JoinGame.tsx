@@ -31,7 +31,7 @@ const JoinGame = () => {
       />
       <button
         onClick={handleJoinGame}
-        className="w-full py-[13px] text-white text-xs font-bold rounded-[5px] bg-[#2F64FF] hover:bg-[#1d4ed8] cursor-pointer transition-colors"
+        className="w-full py-[9px] text-white text-xs font-bold rounded-[5px] bg-[#2F64FF] hover:bg-[#1d4ed8] cursor-pointer transition-colors"
       >
         Load Game
       </button>

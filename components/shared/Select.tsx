@@ -62,7 +62,7 @@ const Select: React.FC<SelectProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="p-[11px_10px] text-xs border-2 border-[#2F64FF] rounded-[5px] bg-[#0a0a0a] focus:outline-none text-left cursor-pointer flex justify-between items-center"
+        className="py-2 px-2.5 text-xs border border-[#2F64FF] rounded-[5px] bg-[#0a0a0a] focus:outline-none text-left cursor-pointer flex justify-between items-center"
       >
         <span className={!displayValue ? "text-gray-500" : ""}>
           {displayValue || placeholder}
@@ -90,7 +90,7 @@ const Select: React.FC<SelectProps> = ({
             <div
               key={option.value}
               onClick={() => handleSelect(option.value)}
-              className={`p-[11px_10px] text-xs cursor-pointer hover:bg-[#2F64FF] hover:text-white transition-colors ${
+              className={`py-2 px-2.5 text-xs cursor-pointer hover:bg-[#2F64FF] hover:text-white transition-colors ${
                 option.value === value ? "bg-[#2F64FF] text-white" : ""
               }`}
             >
