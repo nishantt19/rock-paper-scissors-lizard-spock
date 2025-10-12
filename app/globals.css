@@ -3,18 +3,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #2F64FF;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-dm-sans: var(--font-dm-sans);
+  --color-primary: var(--primary);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #2F64FF;
   }
 }
 
