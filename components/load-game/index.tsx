@@ -1,13 +1,16 @@
 "use client";
-import { useGameContext } from "@/context/GameContext";
-import Input from "../shared/Input";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useAccount } from "wagmi";
+
+import { useGameContext } from "@/context/GameContext";
+import Input from "../shared/Input";
 import { LoadGameFormValues, loadGameSchema } from "@/utils/gameSchema";
-import { Loader2 } from "lucide-react";
 
 const LoadGame = () => {
+  const { isConnected } = useAccount();
   const { setCurrentGame } = useGameContext();
 
   const {
@@ -23,6 +26,10 @@ const LoadGame = () => {
   });
 
   const onSubmit = (data: LoadGameFormValues) => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet first to load the game.");
+      return;
+    }
     setCurrentGame?.(data.contractAddress);
     toast.success("Game Loaded Successfully");
     reset({
