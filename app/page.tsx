@@ -1,15 +1,15 @@
 import Divider from "@/components/Divider";
-import JoinGame from "@/components/JoinGame";
-import Navbar from "@/components/Navbar";
-import NewGame from "@/components/NewGame";
+import LoadGame from "@/components/load-game";
+import Navbar from "@/components/layout/Navbar";
+import CreateGame from "@/components/create-game";
 
 export default function Home() {
   return (
     <main className="min-h-screen max-w-7xl mx-auto">
       <Navbar />
-      <NewGame />
+      <CreateGame />
       <Divider />
-      <JoinGame />
+      <LoadGame />
     </main>
   );
 }
