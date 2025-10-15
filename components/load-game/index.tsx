@@ -1,4 +1,3 @@
-"use client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";

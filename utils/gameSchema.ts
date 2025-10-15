@@ -25,6 +25,33 @@ export const loadGameSchema = z.object({
     })
 })
 
+export const playGameSchema = z.object({
+  move: z
+    .number()
+    .refine(
+      (val) => val !== Move.Null && val >= Move.Rock && val <= Move.Lizard,
+      { error: "Please select a valid move" }
+    ),
+});
+
+export const solveGameSchema = z.object({
+  p1Move: z
+    .number()
+    .refine(
+      (val) => val !== Move.Null && val >= Move.Rock && val <= Move.Lizard,
+      { error: "Please select a valid move" }
+    ),
+  p1Secret: z
+    .string()
+    .regex(/^0x[0-9a-fA-F]+$/, {
+      error: "Salt must be in hex format starting with 0x",
+    }),
+});
+
 export type CreateGameFormValues = z.infer<typeof createGameSchema>
 
 export type LoadGameFormValues = z.infer<typeof loadGameSchema>
+
+export type PlayGameFormValues = z.infer<typeof playGameSchema>;
+
+export type SolveGameFormValues = z.infer<typeof solveGameSchema>;

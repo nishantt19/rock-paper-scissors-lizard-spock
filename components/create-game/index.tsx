@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { useAccount, useDeployContract } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
