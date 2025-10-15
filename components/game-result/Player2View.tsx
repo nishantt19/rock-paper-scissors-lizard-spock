@@ -1,6 +1,4 @@
-"use client";
-
-import React from "react";
+import React, { memo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
@@ -15,13 +13,15 @@ import {
 } from "@/utils/constant";
 import { playGameSchema, type PlayGameFormValues } from "@/utils/gameSchema";
 import { formatEther } from "viem";
+import { GameData } from "@/hooks/useGameData";
 
 type Player2ViewProps = {
   currentGame: string;
-  gameData: any;
+  gameData: GameData;
   isTimeoutAvailable: boolean;
   formatTime: (ms: number) => string;
   p1Timeout: boolean;
+  p2Timeout: boolean;
   isP1TimeoutLoading: boolean;
   onTimeout: () => Promise<void> | void;
   onPlay: (move: MoveValue) => Promise<void> | void;
@@ -34,6 +34,7 @@ const Player2View: React.FC<Player2ViewProps> = ({
   isTimeoutAvailable,
   formatTime,
   p1Timeout,
+  p2Timeout,
   isP1TimeoutLoading,
   onTimeout,
   onPlay,
@@ -88,6 +89,24 @@ const Player2View: React.FC<Player2ViewProps> = ({
           </button>
         </div>
       </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-gray-400">Opponent Address</label>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-sm font-mono break-all">{gameData.player1}</p>
+          <button
+            type="button"
+            onClick={() =>
+              navigator.clipboard
+                .writeText(gameData.player1)
+                .then(() => toast.success("Opponent address copied"))
+                .catch(() => toast.error("Failed to copy"))
+            }
+            className="text-xs px-2 py-1 bg-primary/20 border border-primary/30 rounded hover:bg-primary/30 transition"
+          >
+            Copy
+          </button>
+        </div>
+      </div>
 
       {/* Stake */}
       <div className="flex flex-col gap-1">
@@ -107,7 +126,11 @@ const Player2View: React.FC<Player2ViewProps> = ({
 
       {hasPlayed ? (
         <>
-          {winner === null ? (
+          {p1Timeout ? (
+            <div className="text-center py-2 px-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400">
+              <p className="font-bold text-lg">You Called the Timeout!</p>
+            </div>
+          ) : winner === null ? (
             <div className="flex items-center justify-between gap-3">
               <div className="text-sm text-gray-300">
                 {isTimeoutAvailable ? (
@@ -115,7 +138,7 @@ const Player2View: React.FC<Player2ViewProps> = ({
                 ) : (
                   <span>
                     Waiting for Player 1 to solve. You can call timeout in{" "}
-                    <strong>{formatTime(gameData?.lastAction)}</strong>
+                    <strong>{formatTime(Number(gameData?.lastAction))}</strong>
                   </span>
                 )}
               </div>
@@ -165,7 +188,7 @@ const Player2View: React.FC<Player2ViewProps> = ({
         </>
       ) : (
         <>
-          {p1Timeout ? (
+          {p2Timeout ? (
             <div className="py-2 px-3 text-center rounded-lg bg-red-500/10 border border-red-500/30 text-red-400">
               <p className="font-bold">
                 Player 1 has timed out because you haven&apos;t played.
@@ -226,4 +249,4 @@ const Player2View: React.FC<Player2ViewProps> = ({
   );
 };
 
-export default Player2View;
+export default memo(Player2View);

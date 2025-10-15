@@ -84,7 +84,7 @@ const CreateGame = () => {
         abi: RPS.abi,
         bytecode: RPS.bytecode.object as `0x${string}`,
         args: [p1moveHash, data.opponentAddress],
-        value: parseEther(data.amount),
+        value: parseEther(!data.amount ? "0" : data.amount),
       });
 
       const txReceipt = await waitForTransactionReceipt(config, {

@@ -6,7 +6,8 @@ export const createGameSchema = z.object({
     move: z.number().refine((val) => val !== Move.Null && val >= Move.Rock && val <= Move.Lizard, {
         error: 'Please select a valid move'
     }),
-    amount: z.string().refine((val)=> !isNaN(Number(val)) && Number(val) > 0, {
+    amount: z.string().refine((val)=> val === "" ||
+      (!isNaN(Number(val)) && Number(val) >= 0), {
         error: 'Please enter a valid ETH Amount greater than 0'
     }),
     opponentAddress: z.string().refine((val)=> isAddress(val), {

@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { zeroAddress, type Address } from "viem";
-import { type WriteContractErrorType } from "wagmi/actions";
-import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
-import {
-  LOCALE_STORAGE_KEY,
-  Move,
-  getWinner,
-  type MoveValue,
-  type Winner,
-} from "@/utils/constant";
+import { LOCALE_STORAGE_KEY, Move, type Winner } from "@/utils/constant";
 import {
   useWriteContract,
   useGameData,
@@ -22,6 +14,7 @@ import {
 import { useGameContext } from "@/context/GameContext";
 import Player1View from "./Player1View";
 import Player2View from "./Player2View";
+import { useGameActions } from "@/hooks/useGameActions";
 
 const GameResult = () => {
   const { address } = useAccount();
@@ -41,8 +34,6 @@ const GameResult = () => {
 
   const [p1Timeout, setP1Timeout] = useState(false);
   const [p2Timeout, setP2Timeout] = useState(false);
-  const [isP1TimeoutLoading, setIsP1TimeoutLoading] = useState(false);
-  const [isP2TimeoutLoading, setIsP2TimeoutLoading] = useState(false);
 
   const resetGameData = () => {
     setResetTimer(10);
@@ -89,62 +80,14 @@ const GameResult = () => {
     }
   }, [winner]);
 
-  const handleSolveGame = async (finalMove: MoveValue, finalSecret: string) => {
-    if (!gameData) {
-      toast.error("Game State is null");
-      return;
-    }
-
-    try {
-      await writeContractUtil("solve", undefined, [
-        finalMove,
-        BigInt(finalSecret),
-      ]);
-      setWinner(getWinner(finalMove, gameData.player2Move));
-      resetGameData();
-    } catch (error: any) {
-      const err = error as WriteContractErrorType;
-      console.log("Solve failed: ", err);
-      toast.error(`${err.name}: ${err.message}`);
-    }
-  };
-
-  const handlePlayGame = async (move: MoveValue) => {
-    if (!gameData) {
-      toast.error("Game State is null");
-      return;
-    }
-
-    try {
-      await writeContractUtil("play", gameData.stakeAmount, [move]);
-    } catch (error: any) {
-      const err = error as WriteContractErrorType;
-      console.log("Error while playing: ", err);
-      toast.error(`${err.name}: ${error?.message}`);
-    }
-  };
-
-  const handleTimeout = async () => {
-    const isPlayer1 = address === gameData?.player1;
-    const setLoading = isPlayer1
-      ? setIsP2TimeoutLoading
-      : setIsP1TimeoutLoading;
-    const functionName = isPlayer1 ? "j2Timeout" : "j1Timeout";
-    const setTimeoutFlag = isPlayer1 ? setP2Timeout : setP1Timeout;
-
-    try {
-      setLoading(true);
-      await writeContractUtil(functionName);
-      setTimeoutFlag(true);
-      resetGameData();
-    } catch (error: any) {
-      const err = error as WriteContractErrorType;
-      console.log("Error while doing timeout", err);
-      toast.error(`${err.name}: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const actions = useGameActions({
+    gameData,
+    writeContractUtil,
+    resetGameData,
+    setWinner,
+    setP1Timeout,
+    setP2Timeout,
+  });
 
   if (currentGame === zeroAddress) {
     return (
@@ -205,10 +148,11 @@ const GameResult = () => {
             setP1Secret={setP1Secret}
             isTimeoutAvailable={isTimeoutAvailable}
             formatTime={formatTime}
+            p1Timeout={p1Timeout}
             p2Timeout={p2Timeout}
-            isP2TimeoutLoading={isP2TimeoutLoading}
-            onTimeout={handleTimeout}
-            onSolve={handleSolveGame}
+            isP2TimeoutLoading={actions.isP2TimeoutLoading}
+            onTimeout={actions.handleTimeout}
+            onSolve={actions.handleSolveGame}
             winner={winner}
           />
         )}
@@ -220,9 +164,10 @@ const GameResult = () => {
             isTimeoutAvailable={isTimeoutAvailable}
             formatTime={formatTime}
             p1Timeout={p1Timeout}
-            isP1TimeoutLoading={isP1TimeoutLoading}
-            onTimeout={handleTimeout}
-            onPlay={handlePlayGame}
+            p2Timeout={p2Timeout}
+            isP1TimeoutLoading={actions.isP1TimeoutLoading}
+            onTimeout={actions.handleTimeout}
+            onPlay={actions.handlePlayGame}
             winner={winner}
           />
         )}
