@@ -127,7 +127,7 @@ const GameResult = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-xl p-8 shadow-2xl hover:border-gray-700 transition-all duration-300 hover:shadow-purple-500/10">
+      <div className="flex flex-col gap-6 p-6 rounded-xl border border-white/10 bg-background/30 backdrop-blur-sm">
         {resetTimer > 0 && (
           <div className="mb-6 text-center py-2 px-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400">
             <p className="font-semibold">

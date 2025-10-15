@@ -14,6 +14,12 @@ import {
 import { playGameSchema, type PlayGameFormValues } from "@/utils/gameSchema";
 import { formatEther } from "viem";
 import { GameData } from "@/hooks/useGameData";
+import {
+  CopyableDisplay,
+  Display,
+  StatusMessage,
+  TimeoutSection,
+} from "../shared";
 
 type Player2ViewProps = {
   currentGame: string;
@@ -70,58 +76,18 @@ const Player2View: React.FC<Player2ViewProps> = ({
         <p className="text-sm text-gray-400">Player 2</p>
       </div>
 
-      {/* Contract Address with Copy */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-400">Game Address</label>
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-mono break-all">{currentGame}</p>
-          <button
-            type="button"
-            onClick={() =>
-              navigator.clipboard
-                .writeText(currentGame)
-                .then(() => toast.success("Address copied"))
-                .catch(() => toast.error("Failed to copy"))
-            }
-            className="text-xs px-2 py-1 bg-primary/20 border border-primary/30 rounded hover:bg-primary/30 transition"
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-400">Opponent Address</label>
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-mono break-all">{gameData.player1}</p>
-          <button
-            type="button"
-            onClick={() =>
-              navigator.clipboard
-                .writeText(gameData.player1)
-                .then(() => toast.success("Opponent address copied"))
-                .catch(() => toast.error("Failed to copy"))
-            }
-            className="text-xs px-2 py-1 bg-primary/20 border border-primary/30 rounded hover:bg-primary/30 transition"
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-
-      {/* Stake */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-400">Amount to Stake</label>
-        <p className="text-sm">{formatEther(gameData.stakeAmount)} ETH</p>
-      </div>
-
-      {/* Show already chosen move if any */}
+      <CopyableDisplay label="Game Address" value={currentGame} />
+      <CopyableDisplay label="Opponent Address" value={gameData.player1} />
+      <Display
+        label="Amount to Stake"
+        value={`${formatEther(gameData.stakeAmount)} ETH`}
+      />
       {hasPlayed && (
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-400">Your Move</label>
-          <p className="text-sm">{Move[gameData.player2Move as MoveValue]}</p>
-        </div>
+        <Display
+          label="Your Move"
+          value={Move[gameData.player2Move as MoveValue]}
+        />
       )}
-
       <div className="border-t border-gray-800 my-2"></div>
 
       {hasPlayed ? (
@@ -131,59 +97,33 @@ const Player2View: React.FC<Player2ViewProps> = ({
               <p className="font-bold text-lg">You Called the Timeout!</p>
             </div>
           ) : winner === null ? (
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-sm text-gray-300">
-                {isTimeoutAvailable ? (
-                  <span>You can call timeout now.</span>
-                ) : (
-                  <span>
-                    Waiting for Player 1 to solve. You can call timeout in{" "}
-                    <strong>{formatTime(Number(gameData?.lastAction))}</strong>
-                  </span>
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={onTimeout}
-                disabled={!isTimeoutAvailable || isP1TimeoutLoading}
-                className={`px-4 py-2 rounded-lg border w-full md:w-auto ${
-                  !isTimeoutAvailable || isP1TimeoutLoading
-                    ? "bg-primary/50 cursor-not-allowed"
-                    : "bg-primary hover:bg-primary/90"
-                } text-white`}
-              >
-                {isP1TimeoutLoading ? (
-                  <>
-                    <Loader2
-                      className="animate-spin mr-2 inline-block"
-                      size={16}
-                    />
-                    Calling Timeout...
-                  </>
-                ) : (
-                  "Call Timeout"
-                )}
-              </button>
-            </div>
+            <TimeoutSection
+              hasTimedOut={p1Timeout}
+              timeoutMessage="You Called the Timeout!"
+              isTimeoutAvailable={isTimeoutAvailable}
+              waitingMessage="Waiting for Player 1 to solve. You can call timeout in"
+              formatTime={() => formatTime(Number(gameData?.lastAction))}
+              isLoading={isP1TimeoutLoading}
+              onTimeout={onTimeout}
+            />
           ) : (
-            <div
-              className={`text-center py-2 px-3 rounded-lg ${
+            <StatusMessage
+              variant={
                 winner === "draw"
-                  ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400"
-                  : winner === "player2"
-                  ? "bg-green-500/10 border border-green-500/30 text-green-400"
-                  : "bg-red-500/10 border border-red-500/30 text-red-400"
-              }`}
+                  ? "warning"
+                  : winner === "player1"
+                  ? "success"
+                  : "error"
+              }
             >
               <p className="font-bold text-lg">
                 {winner === "draw"
                   ? "It's a tie!"
                   : winner === "player2"
-                  ? "🎉 You won the game!"
+                  ? "You won the game!"
                   : "You lost this round."}
               </p>
-            </div>
+            </StatusMessage>
           )}
         </>
       ) : (
@@ -197,33 +137,35 @@ const Player2View: React.FC<Player2ViewProps> = ({
           ) : (
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-3"
+              className="flex flex-col gap-4"
             >
-              <Select
-                label="Select Your Move"
-                options={getPlayableMoves().map(([label, value]) => ({
-                  label,
-                  value: value.toString(),
-                }))}
-                value={String(selectedMove ?? Move.Null)}
-                onChange={(val) =>
-                  setValue("move", Number(val) as MoveValue, {
-                    shouldValidate: true,
-                  })
-                }
-                placeholder="Select your move"
-                name="move"
-              />
-              {errors.move && (
-                <p className="text-red-500 text-xs mt-2 ml-0.5">
-                  {errors.move.message as string}
-                </p>
-              )}
+              <div>
+                <Select
+                  label="Select Your Move"
+                  options={getPlayableMoves().map(([label, value]) => ({
+                    label,
+                    value: value.toString(),
+                  }))}
+                  value={String(selectedMove ?? Move.Null)}
+                  onChange={(val) =>
+                    setValue("move", Number(val) as MoveValue, {
+                      shouldValidate: true,
+                    })
+                  }
+                  placeholder="Select your move"
+                  name="move"
+                />
+                {errors.move && (
+                  <p className="text-red-400 text-xs mt-1 ml-0.5">
+                    {errors.move.message as string}
+                  </p>
+                )}
+              </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-3.5 text-sm font-semibold rounded-lg transition-all ${
+                className={`w-full py-3.5 flex justify-center items-center text-sm font-semibold rounded-lg transition-all ${
                   isSubmitting
                     ? "bg-primary/50 cursor-not-allowed"
                     : "bg-primary hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"

@@ -151,7 +151,7 @@ const CreateGame = () => {
               name="move"
             />
             {errors.move && (
-              <p className="text-red-500 text-xs mt-2 ml-0.5">
+              <p className="text-red-400 text-xs mt-1 ml-0.5">
                 {errors.move.message}
               </p>
             )}
@@ -165,7 +165,7 @@ const CreateGame = () => {
               {...register("amount")}
             />
             {errors.amount && (
-              <p className="text-red-500 text-xs mt-2 ml-0.5">
+              <p className="text-red-400 text-xs mt-1 ml-0.5">
                 {errors.amount?.message}
               </p>
             )}
@@ -182,7 +182,7 @@ const CreateGame = () => {
             })}
           />
           {errors.opponentAddress && (
-            <p className="text-red-500 text-xs mt-2 ml-0.5">
+            <p className="text-red-400 text-xs mt-1 ml-0.5">
               {errors.opponentAddress.message}
             </p>
           )}
@@ -206,7 +206,7 @@ const CreateGame = () => {
               </button>
             </div>
             {errors.salt && (
-              <p className="text-red-500 text-xs mt-2 ml-0.5">
+              <p className="text-red-400 text-xs mt-1 ml-0.5">
                 {errors.salt.message}
               </p>
             )}
@@ -216,7 +216,7 @@ const CreateGame = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-3.5 text-sm font-semibold rounded-lg transition-all ${
+          className={`w-full py-3.5 flex justify-center items-center text-sm font-semibold rounded-lg transition-all ${
             isSubmitting
               ? "bg-primary/50 cursor-not-allowed"
               : "bg-primary hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"

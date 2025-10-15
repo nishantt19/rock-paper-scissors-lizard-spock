@@ -61,7 +61,7 @@ const LoadGame = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`py-2.5 px-8 text-sm font-semibold rounded-lg transition-all whitespace-nowrap h-[42px] ${
+            className={`py-2.5 px-8 flex justify-center items-center text-sm font-semibold rounded-lg transition-all whitespace-nowrap h-[42px] ${
               isSubmitting
                 ? "bg-primary/50 cursor-not-allowed"
                 : "bg-primary hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"
@@ -78,7 +78,7 @@ const LoadGame = () => {
           </button>
         </div>
         {errors.contractAddress && (
-          <p className="text-red-500 text-xs mt-2 ml-0.5">
+          <p className="text-red-400 text-xs mt-1 ml-0.5">
             {errors.contractAddress.message}
           </p>
         )}

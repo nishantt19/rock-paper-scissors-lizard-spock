@@ -37,7 +37,7 @@ export const useGameActions = ({
       }
       const moveHash = keccak256(encodePacked(['uint8', 'uint256'], [finalMove, BigInt(finalSecret)]));
       if(isLocalStorageEmpty && moveHash !== gameData.commitmentHash){
-        toast.error('Move or secret salt is not right');
+        toast.error("Incorrect move or salt. Make sure you enter the same values you used when creating the game.");
         return;
       }
 
