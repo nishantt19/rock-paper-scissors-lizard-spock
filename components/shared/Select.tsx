@@ -51,10 +51,10 @@ const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <div ref={selectRef} className="flex flex-col relative">
+    <div ref={selectRef} className="flex flex-col gap-1.5 relative">
       <label
         htmlFor={name}
-        className="text-xs text-[#2F64FF] font-bold relative top-2 mx-0 my-0 ml-[7px] px-[3px] py-0 bg-[#0a0a0a] w-fit z-10"
+        className="text-xs font-semibold text-foreground/70 px-0.5"
       >
         {label}
       </label>
@@ -62,17 +62,17 @@ const Select: React.FC<SelectProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="py-2 px-2.5 text-xs border border-[#2F64FF] rounded-[5px] bg-[#0a0a0a] focus:outline-none text-left cursor-pointer flex justify-between items-center"
+        className="py-2.5 px-3.5 text-sm border border-white/10 rounded-lg bg-background/50 backdrop-blur-sm focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 text-left cursor-pointer flex justify-between items-center transition-all hover:border-white/20"
       >
-        <span className={!displayValue ? "text-gray-500" : ""}>
+        <span className={!displayValue ? "text-foreground/30" : ""}>
           {displayValue || placeholder}
         </span>
         <svg
-          className={`w-4 h-4 transition-transform ${
+          className={`w-4 h-4 transition-transform text-primary ${
             isOpen ? "rotate-180" : ""
           }`}
           fill="none"
-          stroke="#818CF8"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path
@@ -85,13 +85,13 @@ const Select: React.FC<SelectProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-[#0a0a0a] border-2 border-[#2F64FF] rounded-[5px] z-20 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-background/95 backdrop-blur-md border border-white/10 rounded-lg z-20 max-h-60 overflow-y-auto shadow-xl">
           {options.map((option) => (
             <div
               key={option.value}
               onClick={() => handleSelect(option.value)}
-              className={`py-2 px-2.5 text-xs cursor-pointer hover:bg-[#2F64FF] hover:text-white transition-colors ${
-                option.value === value ? "bg-[#2F64FF] text-white" : ""
+              className={`py-2.5 px-3.5 text-sm cursor-pointer hover:bg-primary/20 transition-colors ${
+                option.value === value ? "bg-primary/20 text-primary font-medium" : ""
               }`}
             >
               {option.label}

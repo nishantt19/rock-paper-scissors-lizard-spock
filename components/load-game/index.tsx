@@ -38,41 +38,53 @@ const LoadGame = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-[4fr_2fr] justify-center items-end gap-4 max-w-4xl mx-auto">
-        <div>
+    <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold tracking-tight mb-1">
+          Load Existing Game
+        </h2>
+        <p className="text-sm text-foreground/60">
+          Connect to an existing game contract by entering its address
+        </p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="p-6 rounded-xl border border-white/10 bg-background/30 backdrop-blur-sm"
+      >
+        <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
           <Input
             type="text"
             label="Contract Address"
             placeholder="0x..."
             {...register("contractAddress")}
           />
-          {errors.contractAddress && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.contractAddress.message}
-            </p>
-          )}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`py-2.5 px-8 text-sm font-semibold rounded-lg transition-all whitespace-nowrap h-[42px] ${
+              isSubmitting
+                ? "bg-primary/50 cursor-not-allowed"
+                : "bg-primary hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"
+            } text-white`}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="animate-spin mr-2 inline-block" size={18} />
+                Loading...
+              </>
+            ) : (
+              "Load Game"
+            )}
+          </button>
         </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full py-3 text-white text-xs font-bold rounded-[5px] ${
-            isSubmitting
-              ? "bg-[#2f64ff] opacity-30 cursor-not-allowed"
-              : "bg-[#2F64FF] hover:bg-[#1d4ed8] cursor-pointer"
-          } transition-colors`}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="animate-spin mr-2 inline-block" size={16} />{" "}
-              Loading Game...
-            </>
-          ) : (
-            "Load Game"
-          )}
-        </button>
-      </div>
-    </form>
+        {errors.contractAddress && (
+          <p className="text-red-500 text-xs mt-2 ml-0.5">
+            {errors.contractAddress.message}
+          </p>
+        )}
+      </form>
+    </div>
   );
 };
 
