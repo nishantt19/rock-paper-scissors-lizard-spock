@@ -64,7 +64,6 @@ async function scanBlockTx(
         }
       }
     } catch (error: any) {
-      console.error("Error scanning transaction", error);
       toast.error(`Error: ${error?.details}`);
     }
   }

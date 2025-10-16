@@ -48,7 +48,6 @@ export const useLocalStorage = (
       setP1Secret(parsedData.salt);
       setIsLocalStorageEmpty(false);
     } catch (error) {
-      console.error("Error accessing local storage: ", error);
       toast.error(`Error accessing local storage: ${error}`)
       setIsLocalStorageEmpty(true);
     }

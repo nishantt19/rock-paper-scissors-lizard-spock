@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 interface CopyableDisplayProps {
   label: string;
@@ -16,7 +17,7 @@ const CopyableDisplay: React.FC<CopyableDisplayProps> = ({ label, value }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      toast.error(`Failed to copy: ${err}`);
     }
   };
 

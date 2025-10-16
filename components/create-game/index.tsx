@@ -125,7 +125,6 @@ const CreateGame = () => {
         salt: "",
       });
     } catch (error: any) {
-      console.error("Error creating game: ", error);
       toast.error(`Error: ${error?.details}`);
     }
   };

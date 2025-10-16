@@ -122,7 +122,6 @@ export function useWatchGameBlocks({
             }
           }
         } catch (error: any) {
-          console.error("Error scanning block:", error);
           toast.error(`Error: ${error?.details}`);
         }
       }
