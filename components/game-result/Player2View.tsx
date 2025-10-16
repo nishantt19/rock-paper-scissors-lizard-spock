@@ -8,32 +8,18 @@ import Select from "@/components/shared/Select";
 import {
   getPlayableMoves,
   Move,
-  type Winner,
   type MoveValue,
   getWinnerDisplay,
 } from "@/utils/constant";
 import { playGameSchema, type PlayGameFormValues } from "@/utils/gameSchema";
 import { formatEther } from "viem";
-import { GameData } from "@/hooks/useGameData";
 import {
   CopyableDisplay,
   Display,
   StatusMessage,
   TimeoutSection,
 } from "../shared";
-
-type Player2ViewProps = {
-  currentGame: string;
-  gameData: GameData;
-  isTimeoutAvailable: boolean;
-  formatTime: (ms: number) => string;
-  p1Timeout: boolean;
-  p2Timeout: boolean;
-  isP1TimeoutLoading: boolean;
-  onTimeout: () => Promise<void> | void;
-  onPlay: (move: MoveValue) => Promise<void> | void;
-  winner: Winner;
-};
+import { type Player2ViewProps } from "@/types/player.types";
 
 const Player2View: React.FC<Player2ViewProps> = ({
   currentGame,
@@ -99,7 +85,7 @@ const Player2View: React.FC<Player2ViewProps> = ({
               timeoutMessage="You Called the Timeout!"
               isTimeoutAvailable={isTimeoutAvailable}
               waitingMessage="Waiting for Player 1 to solve. You can call timeout in"
-              formatTime={() => formatTime(Number(gameData?.lastAction))}
+              formatTime={formatTime}
               isLoading={isP1TimeoutLoading}
               onTimeout={onTimeout}
             />

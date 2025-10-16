@@ -4,6 +4,7 @@ import { useLocalStorage } from "./useLocalStorage";
 import { useWatchBlock } from "./useWatchBlock";
 import { useWatchGameBlocks } from "./useWatchGameBlocks";
 import { useGameData } from "./useGameData";
+import { useGameReset } from "./useGameReset";
 
 export {
     useGameData,
@@ -11,5 +12,6 @@ export {
     useLocalStorage,
     useWatchBlock,
     useWatchGameBlocks,
-    useWriteContract
+    useWriteContract,
+    useGameReset,
 }

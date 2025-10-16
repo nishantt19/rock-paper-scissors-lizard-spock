@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { type Winner } from "@/types/game.types";
 import { type Address } from "viem";
 
 // Move enum matches the contract's values. Null = no move yet.
@@ -21,14 +21,14 @@ export function getPlayableMoves(): [string, Move][] {
 
 export const LOCALE_STORAGE_KEY = "RPSLS-GAME";
 
+export const GAME_RESET_COUNTDOWN_SECONDS = 10;
+
 // Store Player 1's move and salt locally so they can reveal it later
 export type StoredGame = {
     contractAddress: Address;
     move: string;
     salt: string;
 }
-
-export type Winner = 'player1' | 'player2' | 'draw' | null;
 
 /**
   * RPSLS winner logic using parity algorithm.

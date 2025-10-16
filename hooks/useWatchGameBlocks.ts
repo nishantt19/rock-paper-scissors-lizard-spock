@@ -10,21 +10,10 @@ import { useRef } from "react";
 import { waitForTransactionReceipt } from "wagmi/actions";
 
 import RPS from "@/utils/RPS.json";
-import { getWinner, type Winner } from "@/utils/constant";
+import { getWinner} from "@/utils/constant";
 import { config } from "@/config/wagmi";
-import { type GameData } from "./useGameData";
 import { toast } from "sonner";
-
-interface UseWatchGameBlocksProps {
-  currentGame: string;
-  gameData: GameData | null;
-  winner: Winner;
-  p1Timeout: boolean;
-  p2Timeout: boolean;
-  setWinner: (w: Winner) => void;
-  setP1Timeout: (v: boolean) => void;
-  setP2Timeout: (v: boolean) => void;
-}
+import { UseWatchGameBlocksProps } from "@/types/hooks.interface";
 
 export function useWatchGameBlocks({
   currentGame,

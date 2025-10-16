@@ -9,14 +9,7 @@ import type { Address } from "viem";
 import { LOCALE_STORAGE_KEY, type StoredGame, Move } from "@/utils/constant";
 import { toast } from "sonner";
 import { useGameContext } from "@/context/GameContext";
-
-type GameData = {
-  player1: Address;
-  player2: Address;
-  stakeAmount: bigint;
-  lastAction: bigint;
-  player2Move: number;
-};
+import { type GameData } from "@/types/game.types";
 
 export const useLocalStorage = (
   gameData: GameData | null,

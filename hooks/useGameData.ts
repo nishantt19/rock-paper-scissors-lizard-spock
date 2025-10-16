@@ -7,17 +7,9 @@
 import { useMemo } from "react";
 import { useReadContracts } from "wagmi";
 import { zeroAddress, type Address, type Hash } from "viem";
+import { type GameData } from "@/types/game.types";
 
 import RPS from "@/utils/RPS.json";
-
-export type GameData = {
-  player1: Address;
-  player2: Address;
-  stakeAmount: bigint;
-  lastAction: bigint;
-  player2Move: number;
-  commitmentHash: Hash
-};
 
 export const useGameData = (contractAddress: Address | string) => {
 

@@ -14,30 +14,11 @@ import { StatusMessage } from "@/components/shared/StatusMessage";
 import {
   getPlayableMoves,
   Move,
-  type Winner,
   type MoveValue,
   getWinnerDisplay,
 } from "@/utils/constant";
 import { solveGameSchema, type SolveGameFormValues } from "@/utils/gameSchema";
-import { GameData } from "@/hooks/useGameData";
-
-type Player1ViewProps = {
-  currentGame: string;
-  gameData: GameData;
-  isLocalStorageEmpty: boolean;
-  p1Move: MoveValue;
-  p1Secret: string;
-  setP1Move: (m: MoveValue) => void;
-  setP1Secret: (s: string) => void;
-  isTimeoutAvailable: boolean;
-  formatTime: (ms: number) => string;
-  p1Timeout: boolean;
-  p2Timeout: boolean;
-  isP2TimeoutLoading: boolean;
-  onTimeout: () => Promise<void> | void;
-  onSolve: (move: MoveValue, secret: string) => Promise<void> | void;
-  winner: Winner;
-};
+import { type Player1ViewProps } from "@/types/player.types";
 
 const Player1View: React.FC<Player1ViewProps> = ({
   currentGame,
@@ -167,7 +148,7 @@ const Player1View: React.FC<Player1ViewProps> = ({
           timeoutMessage="You Called the Timeout!"
           isTimeoutAvailable={isTimeoutAvailable}
           waitingMessage="Waiting for Player 2 to play. You can call timeout in"
-          formatTime={() => formatTime(Number(gameData?.lastAction))}
+          formatTime={formatTime}
           isLoading={isP2TimeoutLoading}
           onTimeout={onTimeout}
         />

@@ -7,20 +7,11 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { type WriteContractErrorType } from "wagmi/actions";
-import { getWinner, type MoveValue, type Winner } from "@/utils/constant";
+import { getWinner, type MoveValue } from "@/utils/constant";
 import { useAccount } from "wagmi";
 import { encodePacked, keccak256 } from "viem";
 import { useLocalStorage } from "./useLocalStorage";
-import { GameData } from "./useGameData";
-
-interface UseGameActionsProps {
-  gameData: GameData | null;
-  writeContractUtil: (...args: any[]) => Promise<any>;
-  resetGameData: () => void;
-  setWinner: (w: Winner) => void;
-  setP1Timeout: (b: boolean) => void;
-  setP2Timeout: (b: boolean) => void;
-}
+import { UseGameActionsProps } from "@/types/hooks.interface";
 
 export const useGameActions = ({
   gameData,

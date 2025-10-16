@@ -15,12 +15,7 @@ import { readContract, waitForTransactionReceipt } from "wagmi/actions";
 import { config } from "@/config/wagmi";
 import RPS from "@/utils/RPS.json";
 import { toast } from "sonner";
-
-type UseWatchBlockProps = {
-  address: Address | undefined;
-  currentGame: string;
-  onWatchBlock: (currentAddress: string) => void;
-};
+import { UseWatchBlockProps } from "@/types/hooks.interface";
 
 // Scans tx to detect RPS contract deployments involving the user
 async function scanBlockTx(

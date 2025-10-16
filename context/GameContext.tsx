@@ -1,18 +1,13 @@
 "use client";
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import { zeroAddress } from "viem";
+import { GameContextProps } from "@/types/hooks.interface";
 
-interface GameContextType {
-  currentGame: string;
-  setCurrentGame?: (address: string) => void;
-  resetGame?: () => void;
-}
-
-const initialState: GameContextType = {
+const initialState: GameContextProps = {
   currentGame: zeroAddress,
 };
 
-const GameContext = createContext<GameContextType>(initialState);
+const GameContext = createContext<GameContextProps>(initialState);
 
 export const useGameContext = () => {
   const context = useContext(GameContext);
