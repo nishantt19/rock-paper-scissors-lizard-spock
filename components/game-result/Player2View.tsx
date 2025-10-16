@@ -32,6 +32,7 @@ const Player2View: React.FC<Player2ViewProps> = ({
   onTimeout,
   onPlay,
   winner,
+  p1Move,
 }) => {
   const hasPlayed = gameData.player2Move !== 0;
 
@@ -74,6 +75,9 @@ const Player2View: React.FC<Player2ViewProps> = ({
           label="Your Move"
           value={Move[gameData.player2Move as MoveValue]}
         />
+      )}
+      {winner !== null && (
+        <Display label="Opponent Move" value={Move[p1Move as MoveValue]} />
       )}
       <div className="border-t border-gray-800 my-2"></div>
 

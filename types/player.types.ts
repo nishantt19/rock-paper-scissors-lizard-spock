@@ -30,4 +30,5 @@ export type Player2ViewProps = {
   onTimeout: () => Promise<void> | void;
   onPlay: (move: MoveValue) => Promise<void> | void;
   winner: Winner;
+  p1Move: MoveValue;
 };

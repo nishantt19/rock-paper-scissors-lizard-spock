@@ -134,6 +134,12 @@ const Player1View: React.FC<Player1ViewProps> = ({
         <>
           <div className="grid grid-cols-1 gap-4">
             <Display label="Your Move" value={Move[p1Move]} />
+            {winner !== null && (
+              <Display
+                label="Opponent Move"
+                value={Move[gameData.player2Move as MoveValue]}
+              />
+            )}
             <Display label="Your Secret Salt" value={p1Secret} />
           </div>
         </>

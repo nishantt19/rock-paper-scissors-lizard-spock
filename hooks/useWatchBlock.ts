@@ -77,10 +77,9 @@ export function useWatchBlock({
 
       if (!block || !Array.isArray(block.transactions)) return;
 
-        block.transactions.forEach((tx)=> {
-          if(typeof tx === 'string') return;
-          scanBlockTx(tx, address, onWatchBlock)
-        })
+      for(const tx of block.transactions){
+        scanBlockTx(tx, address, onWatchBlock);
+      }
     },
   });
 }

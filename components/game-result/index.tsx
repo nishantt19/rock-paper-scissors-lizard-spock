@@ -37,6 +37,7 @@ const GameResult = () => {
   const [winner, setWinner] = useState<Winner>(null);
   const [p1Timeout, setP1Timeout] = useState(false);
   const [p2Timeout, setP2Timeout] = useState(false);
+  const [blockchainP1Move, setBlockchainP1Move] = useState<number>(0);
 
   const { resetTimer, resetGameData } = useGameReset({
     winner,
@@ -62,6 +63,7 @@ const GameResult = () => {
     setWinner,
     setP1Timeout,
     setP2Timeout,
+    setBlockchainP1Move,
   });
 
   // Provide handlers like handleSolve, handlePlay and handleTimeout
@@ -147,6 +149,7 @@ const GameResult = () => {
             currentGame={currentGame as string}
             gameData={gameData}
             isTimeoutAvailable={isTimeoutAvailable}
+            p1Move={blockchainP1Move}
             formatTime={formatTime}
             p1Timeout={p1Timeout}
             p2Timeout={p2Timeout}

@@ -26,6 +26,7 @@ export interface UseWatchGameBlocksProps {
   setWinner: (w: Winner) => void;
   setP1Timeout: (v: boolean) => void;
   setP2Timeout: (v: boolean) => void;
+  setBlockchainP1Move: (m: MoveValue) => void;
 }
 
 export interface GameContextProps {

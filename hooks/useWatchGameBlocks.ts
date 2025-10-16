@@ -24,6 +24,7 @@ export function useWatchGameBlocks({
   setWinner,
   setP1Timeout,
   setP2Timeout,
+  setBlockchainP1Move,
 }: UseWatchGameBlocksProps) {
   // Use ref to avoid stale closure issues in onBlock callback
   const stateRef = useRef({
@@ -73,8 +74,10 @@ export function useWatchGameBlocks({
               confirmations: 1,
             });
             if (receipt.status === "success" && decoded.args) {
+              const p1MoveFromChain = Number(decoded.args[0]);
+              setBlockchainP1Move(p1MoveFromChain);
               setWinner(
-                getWinner(Number(decoded.args[0]), gameData.player2Move)
+                getWinner(p1MoveFromChain, gameData.player2Move)
               );
             }
           }
