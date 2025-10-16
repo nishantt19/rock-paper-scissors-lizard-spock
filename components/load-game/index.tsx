@@ -8,6 +8,10 @@ import { useGameContext } from "@/context/GameContext";
 import Input from "../shared/Input";
 import { LoadGameFormValues, loadGameSchema } from "@/utils/gameSchema";
 
+/**
+ * Form for loading an existing RPSLS game by contract address.
+ * Validates the address format and sets it as the active game in context.
+ */
 const LoadGame = () => {
   const { isConnected } = useAccount();
   const { setCurrentGame } = useGameContext();
@@ -24,6 +28,7 @@ const LoadGame = () => {
     },
   });
 
+  // Load the game contract and clear the form
   const onSubmit = (data: LoadGameFormValues) => {
     if (!isConnected) {
       toast.error("Please connect your wallet first to load the game.");

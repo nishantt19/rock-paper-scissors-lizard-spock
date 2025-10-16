@@ -16,26 +16,38 @@ import Player1View from "./Player1View";
 import Player2View from "./Player2View";
 import { useGameActions } from "@/hooks/useGameActions";
 
+/**
+ * Component to handle different player views
+ * Hanldes winner states, timeout tracking and automatic game resets
+ */
 const GameResult = () => {
   const { address } = useAccount();
   const { resetGame, currentGame } = useGameContext();
+  // Initializing the hook to get the write contract util
   const { writeContractUtil } = useWriteContract(currentGame as Address);
+  // Fetch game data from the contract
   const {
     gameData,
     isLoading: isContractLoading,
     error: contractError,
   } = useGameData(currentGame as Address);
+  // Hook to handle the timeouts and formatting the time
   const { formatTime, isTimeoutAvailable } = useGameTimer(gameData?.lastAction);
+  // Hook to handle the local storage for player 1's move and secret
   const { p1Move, p1Secret, isLocalStorageEmpty, setP1Move, setP1Secret } =
     useLocalStorage(gameData, address);
 
   const [resetTimer, setResetTimer] = useState<number>(0);
+  const [isResetting, setIsResetting] = useState(false);
   const [winner, setWinner] = useState<Winner>(null);
-
   const [p1Timeout, setP1Timeout] = useState(false);
   const [p2Timeout, setP2Timeout] = useState(false);
 
+  // Resets all game data and states once the game ends
   const resetGameData = () => {
+    if (isResetting) return;
+
+    setIsResetting(true);
     setResetTimer(10);
 
     const interval = setInterval(() => {
@@ -58,9 +70,11 @@ const GameResult = () => {
         localStorage.removeItem(LOCALE_STORAGE_KEY);
       }
       resetGame?.();
+      setIsResetting(false);
     }, 10000);
   };
 
+  // Watching the block for game state changes like winner determination or timeout
   useWatchGameBlocks({
     currentGame,
     gameData,
@@ -70,16 +84,16 @@ const GameResult = () => {
     setWinner,
     setP1Timeout,
     setP2Timeout,
-    resetGameData,
   });
 
+  // Trigger reset countdown when game ends (winner declared or timeout)
   useEffect(() => {
-    if (winner !== null) {
-      const t = setTimeout(() => resetGameData(), 0);
-      return () => clearTimeout(t);
+    if ((winner !== null || p1Timeout || p2Timeout) && !isResetting) {
+      resetGameData();
     }
-  }, [winner]);
+  }, [winner, p1Timeout, p2Timeout, isResetting]);
 
+  // Provide handlers like handleSolve, handlePlay and handleTimeout
   const actions = useGameActions({
     gameData,
     writeContractUtil,

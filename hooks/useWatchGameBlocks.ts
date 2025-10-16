@@ -1,3 +1,9 @@
+/**
+ * Watches blockchain for game-ending events on the current game contract.
+ * Detects solve (winner determination), j1Timeout, and j2Timeout transactions.
+ * Stops watching once a winner is determined or timeout occurs.
+ */
+
 import { useWatchBlocks } from "wagmi";
 import { decodeFunctionData, zeroAddress } from "viem";
 import { useRef } from "react";
@@ -18,7 +24,6 @@ interface UseWatchGameBlocksProps {
   setWinner: (w: Winner) => void;
   setP1Timeout: (v: boolean) => void;
   setP2Timeout: (v: boolean) => void;
-  resetGameData: () => void;
 }
 
 export function useWatchGameBlocks({
@@ -30,8 +35,8 @@ export function useWatchGameBlocks({
   setWinner,
   setP1Timeout,
   setP2Timeout,
-  resetGameData,
 }: UseWatchGameBlocksProps) {
+  // Use ref to avoid stale closure issues in onBlock callback
   const stateRef = useRef({
     gameData,
     winner,
@@ -47,12 +52,15 @@ export function useWatchGameBlocks({
     enabled: Boolean(currentGame && currentGame !== zeroAddress),
     onBlock: async (block) => {
       const { gameData, winner, p1Timeout, p2Timeout } = stateRef.current;
+
+      // Return if game already ended
       if (!gameData || winner || currentGame === zeroAddress) {
         return;
       }
 
       for (const tx of block.transactions) {
         try {
+          // Checking for the transaction sent to our game contract. If not, then continue
           if (tx.to?.toLowerCase() !== currentGame.toLowerCase()) continue;
 
           let decoded;
@@ -65,6 +73,7 @@ export function useWatchGameBlocks({
             continue;
           }
 
+          // Player 1 solved - calculate winner from revealed move
           if (
             decoded.args !== undefined &&
             decoded.functionName === "solve" &&
@@ -81,6 +90,7 @@ export function useWatchGameBlocks({
             }
           }
 
+          // Player 2 claimed timeout on Player 1
           if (
             decoded.functionName === "j1Timeout" &&
             tx.from.toLowerCase() === gameData.player2.toLowerCase()
@@ -92,11 +102,11 @@ export function useWatchGameBlocks({
               });
               if (receipt.status === "success") {
                 setP1Timeout(true);
-                resetGameData();
               }
             }
           }
 
+          // Player 1 claimed timeout on Player 2
           if (
             decoded.functionName === "j2Timeout" &&
             tx.from.toLowerCase() === gameData.player1.toLowerCase()
@@ -108,7 +118,6 @@ export function useWatchGameBlocks({
               });
               if (receipt.status === "success") {
                 setP2Timeout(true);
-                resetGameData();
               }
             }
           }

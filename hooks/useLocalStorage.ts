@@ -1,3 +1,9 @@
+/**
+ * Manages Player 1's local storage for move and salt.
+ * Only runs for Player 1 - retrieves stored commitment data needed to reveal their move later.
+ * Validates that stored data matches the current game.
+ */
+
 import { useState, useEffect } from "react";
 import type { Address } from "viem";
 import { LOCALE_STORAGE_KEY, type StoredGame, Move } from "@/utils/constant";
@@ -22,6 +28,7 @@ export const useLocalStorage = (
   const [isLocalStorageEmpty, setIsLocalStorageEmpty] = useState<boolean>(false);
 
   useEffect(() => {
+    // Skip if not Player 1 - only the game creator needs to access the salt/move
     if (!gameData || address === gameData.player2) return;
 
     try {
@@ -31,6 +38,8 @@ export const useLocalStorage = (
         return;
       }
       const parsedData = JSON.parse(item) as StoredGame;
+
+      // Make sure stored game matches current game
       if(currentGame.toLowerCase() !== parsedData.contractAddress.toLowerCase()){
         setIsLocalStorageEmpty(true);
         return;

@@ -16,6 +16,7 @@ import {
   Move,
   type Winner,
   type MoveValue,
+  getWinnerDisplay,
 } from "@/utils/constant";
 import { solveGameSchema, type SolveGameFormValues } from "@/utils/gameSchema";
 import { GameData } from "@/hooks/useGameData";
@@ -204,23 +205,14 @@ const Player1View: React.FC<Player1ViewProps> = ({
           </button>
         </form>
       ) : (
-        <StatusMessage
-          variant={
-            winner === "draw"
-              ? "warning"
-              : winner === "player1"
-              ? "success"
-              : "error"
-          }
-        >
-          <p className="font-bold text-lg">
-            {winner === "draw"
-              ? "It's a tie!"
-              : winner === "player1"
-              ? "You won the game!"
-              : "You lost this round."}
-          </p>
-        </StatusMessage>
+        (() => {
+          const { variant, message } = getWinnerDisplay(winner, "player1");
+          return (
+            <StatusMessage variant={variant}>
+              <p className="font-bold text-lg">{message}</p>
+            </StatusMessage>
+          );
+        })()
       )}
     </div>
   );

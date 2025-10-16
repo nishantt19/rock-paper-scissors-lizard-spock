@@ -1,6 +1,12 @@
+/**
+ * Manages the 5-minute timeout countdown for RPSLS games.
+ * Calculates remaining time from lastAction timestamp and provides
+ * formatted display and flag for when timeout can be claimed.
+ */
+
 import { useState, useEffect } from "react";
 
-const TIMEOUT = 5 * 60 * 1000;
+const TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
 
 export const useGameTimer = (lastAction: bigint | undefined) => {
   const [remainingTime, setRemainingTime] = useState<number>(0);
@@ -8,6 +14,7 @@ export const useGameTimer = (lastAction: bigint | undefined) => {
   useEffect(() => {
     if (!lastAction) return;
 
+    // Converting the timestamp from seconds to ms
     const lastActionInMs = Number(lastAction) * 1000;
     const timeoutEnd = lastActionInMs + TIMEOUT;
 

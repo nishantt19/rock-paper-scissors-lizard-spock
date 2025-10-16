@@ -1,3 +1,9 @@
+/**
+ * Provides action handlers for RPSLS game interactions.
+ * Handles Player 1's solve (reveal), Player 2's play, and timeout claims.
+ * Validates commitments and manages loading states for timeouts.
+ */
+
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { type WriteContractErrorType } from "wagmi/actions";
@@ -25,20 +31,30 @@ export const useGameActions = ({
   setP2Timeout,
 }: UseGameActionsProps) => {
   const { address } = useAccount();
-  const { isLocalStorageEmpty } = useLocalStorage(gameData, address)
+  const { isLocalStorageEmpty } = useLocalStorage(gameData, address);
   const [isP1TimeoutLoading, setIsP1TimeoutLoading] = useState(false);
   const [isP2TimeoutLoading, setIsP2TimeoutLoading] = useState(false);
 
+  // Player 1 reveals their move and secret to solve the game
   const handleSolveGame = useCallback(
     async (finalMove: MoveValue, finalSecret: string) => {
-      if (!gameData){
+      if (!gameData) {
         toast.error("Game State is null");
-        return
-      }
-      const moveHash = keccak256(encodePacked(['uint8', 'uint256'], [finalMove, BigInt(finalSecret)]));
-      if(isLocalStorageEmpty && moveHash !== gameData.commitmentHash){
-        toast.error("Incorrect move or salt. Make sure you enter the same values you used when creating the game.");
         return;
+      }
+
+      if (isLocalStorageEmpty) {
+        // If local storage is empty, Recalculate commitment hash from manually entered move/salt
+        const moveHash = keccak256(
+          encodePacked(["uint8", "uint256"], [finalMove, BigInt(finalSecret)])
+        );
+        // Verify if new move + salt matches the original commitment
+        if (moveHash !== gameData.commitmentHash) {
+          toast.error(
+            "Incorrect move or salt. Make sure you enter the same values you used when creating the game."
+          );
+          return;
+        }
       }
 
       try {
@@ -56,10 +72,11 @@ export const useGameActions = ({
     [gameData, writeContractUtil, resetGameData, setWinner]
   );
 
+  // Player 2 makes their move
   const handlePlayGame = useCallback(
     async (move: MoveValue) => {
-      if (!gameData){
-        toast.error("Game State is null")
+      if (!gameData) {
+        toast.error("Game State is null");
         return;
       }
 
@@ -73,6 +90,7 @@ export const useGameActions = ({
     [gameData, writeContractUtil]
   );
 
+  // Claim timeout - function called depends on who's claiming
   const handleTimeout = useCallback(async () => {
     if (!gameData) return;
 

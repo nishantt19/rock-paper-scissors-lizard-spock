@@ -23,6 +23,11 @@ import {
   type CreateGameFormValues,
 } from "@/utils/gameSchema";
 
+/**
+ * Form for creating a new RPSLS game contract.
+ * Deploys a new game with Player 1's commitment (hashed move + salt),
+ * opponent address, and stake. Stores move/salt locally for later reveal.
+ */
 const CreateGame = () => {
   const { isConnected } = useAccount();
   const { deployContractAsync } = useDeployContract();
@@ -48,6 +53,7 @@ const CreateGame = () => {
 
   const selectedMove = watch("move");
 
+  // Generate secure random salt
   const generateSalt = () => {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
@@ -57,6 +63,7 @@ const CreateGame = () => {
     setValue("salt", `0x${salt}`, { shouldValidate: true });
   };
 
+  // Auto-generate salt when valid opponent address is entered
   const handleOpponentAddressChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -69,6 +76,7 @@ const CreateGame = () => {
     }
   };
 
+  // Deploy game contract with commitment and store move/salt for reveal phase
   const onSubmit = async (data: CreateGameFormValues) => {
     if (!isConnected) {
       toast.error("Please connect your wallet first to create a game.");
@@ -76,6 +84,7 @@ const CreateGame = () => {
     }
 
     try {
+      // Hash move + salt
       const p1moveHash = keccak256(
         encodePacked(["uint8", "uint256"], [data.move, BigInt(data.salt)])
       );
@@ -98,6 +107,7 @@ const CreateGame = () => {
 
       setCurrentGame?.(txReceipt.contractAddress);
 
+      // Store locally - needed to reveal and solve game later
       const createGame: StoredGame = {
         contractAddress: txReceipt.contractAddress,
         move: data.move.toString(),

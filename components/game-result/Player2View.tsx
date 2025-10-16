@@ -10,6 +10,7 @@ import {
   Move,
   type Winner,
   type MoveValue,
+  getWinnerDisplay,
 } from "@/utils/constant";
 import { playGameSchema, type PlayGameFormValues } from "@/utils/gameSchema";
 import { formatEther } from "viem";
@@ -92,11 +93,7 @@ const Player2View: React.FC<Player2ViewProps> = ({
 
       {hasPlayed ? (
         <>
-          {p1Timeout ? (
-            <div className="text-center py-2 px-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400">
-              <p className="font-bold text-lg">You Called the Timeout!</p>
-            </div>
-          ) : winner === null ? (
+          {winner === null ? (
             <TimeoutSection
               hasTimedOut={p1Timeout}
               timeoutMessage="You Called the Timeout!"
@@ -107,33 +104,24 @@ const Player2View: React.FC<Player2ViewProps> = ({
               onTimeout={onTimeout}
             />
           ) : (
-            <StatusMessage
-              variant={
-                winner === "draw"
-                  ? "warning"
-                  : winner === "player1"
-                  ? "success"
-                  : "error"
-              }
-            >
-              <p className="font-bold text-lg">
-                {winner === "draw"
-                  ? "It's a tie!"
-                  : winner === "player2"
-                  ? "You won the game!"
-                  : "You lost this round."}
-              </p>
-            </StatusMessage>
+            (() => {
+              const { variant, message } = getWinnerDisplay(winner, "player2");
+              return (
+                <StatusMessage variant={variant}>
+                  <p className="font-bold text-lg">{message}</p>
+                </StatusMessage>
+              );
+            })()
           )}
         </>
       ) : (
         <>
           {p2Timeout ? (
-            <div className="py-2 px-3 text-center rounded-lg bg-red-500/10 border border-red-500/30 text-red-400">
+            <StatusMessage variant="error">
               <p className="font-bold">
                 Player 1 has timed out because you haven&apos;t played.
               </p>
-            </div>
+            </StatusMessage>
           ) : (
             <form
               onSubmit={handleSubmit(onSubmit)}

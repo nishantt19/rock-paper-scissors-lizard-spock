@@ -1,3 +1,9 @@
+/**
+ * Fetches game state from the RPSLS contract.
+ * Reads all relevant game data in a single batch call (players, stake, moves, etc).
+ * Polls every 5 seconds to keep data fresh.
+ */
+
 import { useMemo } from "react";
 import { useReadContracts } from "wagmi";
 import { zeroAddress, type Address, type Hash } from "viem";
@@ -20,6 +26,7 @@ export const useGameData = (contractAddress: Address | string) => {
     abi: RPS.abi,
   } as const;
 
+  // Batch read all game state in one call
   const {
     data: contractData,
     isLoading,
@@ -29,32 +36,32 @@ export const useGameData = (contractAddress: Address | string) => {
     contracts: [
       {
         ...contract,
-        functionName: "j1",
+        functionName: "j1", // Player 1 address
       },
       {
         ...contract,
-        functionName: "j2",
+        functionName: "j2", // Player 2 address
       },
       {
         ...contract,
-        functionName: "stake",
+        functionName: "stake", // Stake amount
       },
       {
         ...contract,
-        functionName: "lastAction",
+        functionName: "lastAction", // Timestamp for timeout calculation
       },
       {
         ...contract,
-        functionName: "c2",
+        functionName: "c2", // Player 2's move
       },
       {
         ...contract,
-        functionName: "c1Hash",
+        functionName: "c1Hash", // Player 1's commitment hash
       },
     ],
     query: {
       enabled: contractAddress !== zeroAddress,
-      refetchInterval: 5000,
+      refetchInterval: 5000, // Poll every 5s
     },
   });
 

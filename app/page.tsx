@@ -4,7 +4,6 @@ import { zeroAddress } from "viem";
 
 import { useGameContext } from "@/context/GameContext";
 import { useWatchBlock } from "@/hooks";
-import Divider from "@/components/Divider";
 import LoadGame from "@/components/load-game";
 import Navbar from "@/components/layout/Navbar";
 import CreateGame from "@/components/create-game";
@@ -29,7 +28,6 @@ export default function Home() {
         {currentGame === zeroAddress ? (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <CreateGame />
-            <Divider text="OR" />
             <LoadGame />
           </div>
         ) : (
